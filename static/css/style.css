@@ -1,0 +1,282 @@
+/* ================================
+   AI Job Portal - Custom Styles
+   ================================ */
+
+/* Root Variables */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #0dcaf0;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+}
+
+.min-vh-50 {
+    min-height: 50vh;
+}
+
+/* Cards */
+.card {
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* Job Cards */
+.job-card:hover {
+    border-left: 4px solid var(--primary-color);
+}
+
+.recommendation-card {
+    border-left: 4px solid transparent;
+}
+
+.recommendation-card:hover {
+    border-left-color: var(--primary-color);
+}
+
+/* Feature Icons */
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.feature-icon-lg {
+    width: 80px;
+    height: 80px;
+}
+
+/* Match Score Circle */
+.match-score {
+    font-size: 0.75rem;
+}
+
+/* Score Circle SVG */
+.score-circle svg {
+    transform: rotate(-90deg);
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.8em;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 0.625rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* Input Groups */
+.input-group-text {
+    background-color: #f8f9fa;
+    border-radius: 8px 0 0 8px;
+}
+
+/* Tables */
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Progress Bars */
+.progress {
+    border-radius: 10px;
+    height: 8px;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.dropdown-item {
+    padding: 0.625rem 1rem;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+footer a {
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: white !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+
+    .hero-section .d-flex {
+        flex-direction: column;
+    }
+
+    .hero-section .btn {
+        width: 100%;
+    }
+
+    .stat-card {
+        margin-top: 2rem;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Job Description Formatting */
+.job-description {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Pagination */
+.pagination {
+    gap: 4px;
+}
+
+.page-link {
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+/* Stats Cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-info,
+.card.bg-warning {
+    border: none;
+}
+
+/* Scroll to top */
+.scroll-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    z-index: 1000;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Print Styles */
+@media print {
+    .navbar, footer, .btn {
+        display: none !important;
+    }
+}

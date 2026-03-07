@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Register - AI Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-person-plus-fill text-primary" style="font-size: 3rem;"></i>
+                        <h2 class="mt-3">Create Account</h2>
+                        <p class="text-muted">Join our AI-powered job portal</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('register') }}">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                       placeholder="you@example.com">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required
+                                       placeholder="Create a strong password" minlength="6">
+                            </div>
+                            <small class="text-muted">Minimum 6 characters</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">I am a</label>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="user_type" id="candidate" value="candidate" checked>
+                                    <label class="btn btn-outline-primary w-100 py-3" for="candidate">
+                                        <i class="bi bi-person-fill d-block mb-2" style="font-size: 2rem;"></i>
+                                        <span class="fw-semibold">Job Seeker</span>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="user_type" id="recruiter" value="recruiter">
+                                    <label class="btn btn-outline-success w-100 py-3" for="recruiter">
+                                        <i class="bi bi-building d-block mb-2" style="font-size: 2rem;"></i>
+                                        <span class="fw-semibold">Recruiter</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            <i class="bi bi-person-plus me-2"></i>Create Account
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <p class="text-center mb-0">
+                        Already have an account?
+                        <a href="{{ url_for('login') }}" class="text-primary fw-semibold">Sign in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

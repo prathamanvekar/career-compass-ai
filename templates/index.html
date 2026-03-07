@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}AI Job Portal - Find Your Dream Job{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Find Your Perfect Job with AI-Powered Matching
+                </h1>
+                <p class="lead mb-4">
+                    Upload your resume and let our intelligent system match you with the best opportunities.
+                    Get personalized recommendations, skill gap analysis, and career guidance.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('browse_jobs') }}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-search me-2"></i>Browse Jobs
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                <div class="hero-stats">
+                    <div class="stat-card bg-white text-dark p-4 rounded-4 shadow-lg d-inline-block">
+                        <h2 class="display-5 fw-bold text-primary mb-0">{{ job_count | default(10000) }}+</h2>
+                        <p class="text-muted mb-0">Active Jobs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+
+        <div class="row g-4">
+            <!-- For Candidates -->
+            <div class="col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="bi bi-person-fill me-2"></i>For Candidates</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3">
+                                <i class="bi bi-upload fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>1. Upload Resume</h5>
+                                <p class="text-muted mb-0">Upload your PDF or DOCX resume for AI analysis</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle p-3 me-3">
+                                <i class="bi bi-stars fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>2. Get Analysis</h5>
+                                <p class="text-muted mb-0">Receive quality score, domain detection, and improvement suggestions</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle p-3 me-3">
+                                <i class="bi bi-bullseye fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>3. View Matches</h5>
+                                <p class="text-muted mb-0">Get top 3 job recommendations with match percentage</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle p-3 me-3">
+                                <i class="bi bi-graph-up-arrow fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>4. Plan Career</h5>
+                                <p class="text-muted mb-0">Explore skill gaps and career progression roadmap</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- For Recruiters -->
+            <div class="col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0"><i class="bi bi-building me-2"></i>For Recruiters</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3">
+                                <i class="bi bi-file-earmark-plus fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>1. Post Jobs</h5>
+                                <p class="text-muted mb-0">Create detailed job listings with requirements</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle p-3 me-3">
+                                <i class="bi bi-broadcast fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>2. Instant Visibility</h5>
+                                <p class="text-muted mb-0">Jobs instantly visible to all registered candidates</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle p-3 me-3">
+                                <i class="bi bi-people fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>3. Receive Applications</h5>
+                                <p class="text-muted mb-0">View candidates with AI-calculated fit scores</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle p-3 me-3">
+                                <i class="bi bi-funnel fs-4"></i>
+                            </div>
+                            <div>
+                                <h5>4. Smart Filtering</h5>
+                                <p class="text-muted mb-0">Candidates ranked by match score automatically</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Features -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Powered by Advanced AI</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-4">
+                    <div class="card-body">
+                        <div class="feature-icon-lg bg-primary bg-opacity-10 text-primary rounded-circle p-4 d-inline-block mb-3">
+                            <i class="bi bi-robot fs-1"></i>
+                        </div>
+                        <h4>Gemini AI</h4>
+                        <p class="text-muted">Advanced resume parsing and career advice using Google's Gemini AI</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-4">
+                    <div class="card-body">
+                        <div class="feature-icon-lg bg-success bg-opacity-10 text-success rounded-circle p-4 d-inline-block mb-3">
+                            <i class="bi bi-diagram-3 fs-1"></i>
+                        </div>
+                        <h4>Sentence-BERT</h4>
+                        <p class="text-muted">Semantic matching using transformer-based embeddings for accurate job recommendations</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-4">
+                    <div class="card-body">
+                        <div class="feature-icon-lg bg-info bg-opacity-10 text-info rounded-circle p-4 d-inline-block mb-3">
+                            <i class="bi bi-graph-up fs-1"></i>
+                        </div>
+                        <h4>Smart Scoring</h4>
+                        <p class="text-muted">Multi-factor weighted scoring considering skills, experience, and preferences</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Find Your Dream Job?</h2>
+        <p class="lead mb-4">Join thousands of candidates who found their perfect match</p>
+        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+            <i class="bi bi-person-plus me-2"></i>Create Free Account
+        </a>
+    </div>
+</section>
+{% endblock %}

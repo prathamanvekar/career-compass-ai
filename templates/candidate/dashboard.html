@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Dashboard - AI Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Welcome back{% if profile.full_name %}, {{ profile.full_name }}{% endif %}!</h1>
+            <p class="text-muted mb-0">Your AI-powered job search dashboard</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Resume Score</h6>
+                            <h2 class="mb-0">{{ profile.resume_score or 0 }}/100</h2>
+                        </div>
+                        <i class="bi bi-file-earmark-text" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Applications</h6>
+                            <h2 class="mb-0">{{ applications_count }}</h2>
+                        </div>
+                        <i class="bi bi-send" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Job Matches</h6>
+                            <h2 class="mb-0">{{ recommendations|length }}</h2>
+                        </div>
+                        <i class="bi bi-bullseye" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Available Jobs</h6>
+                            <h2 class="mb-0">{{ available_jobs_count }}</h2>
+                        </div>
+                        <i class="bi bi-briefcase" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if available_jobs_count == 0 %}
+    <div class="alert alert-info mb-4">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>No jobs posted yet!</strong> Recruiters haven't posted any jobs yet. Check back soon!
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <!-- Quick Actions -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('upload_resume') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-upload me-2"></i>
+                            {% if profile.resume_path %}Update Resume{% else %}Upload Resume{% endif %}
+                        </a>
+                        <a href="{{ url_for('resume_analysis') }}" class="btn btn-outline-success"
+                           {% if not profile.resume_path %}disabled{% endif %}>
+                            <i class="bi bi-file-earmark-text me-2"></i>View Resume Analysis
+                        </a>
+                        <a href="{{ url_for('job_recommendations') }}" class="btn btn-outline-info"
+                           {% if not profile.resume_path %}disabled{% endif %}>
+                            <i class="bi bi-stars me-2"></i>Job Recommendations
+                        </a>
+                        <a href="{{ url_for('career_map') }}" class="btn btn-outline-warning"
+                           {% if not profile.resume_path %}disabled{% endif %}>
+                            <i class="bi bi-map me-2"></i>Career Map
+                        </a>
+                        <a href="{{ url_for('my_applications') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-folder me-2"></i>My Applications
+                        </a>
+                        <a href="{{ url_for('browse_jobs') }}" class="btn btn-outline-dark">
+                            <i class="bi bi-search me-2"></i>Browse All Jobs
+                        </a>
+                    </div>
+
+                    {% if not profile.resume_path %}
+                    <div class="alert alert-info mt-3 mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Upload your resume to unlock all features!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Job Recommendations -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-bullseye me-2"></i>Top Job Matches</h5>
+                    <a href="{{ url_for('job_recommendations') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recommendations %}
+                        {% for rec in recommendations %}
+                            {% set job = rec.job %}
+                            <div class="d-flex align-items-start mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                                <div class="match-score bg-{{ 'success' if rec.match_score >= 70 else 'warning' if rec.match_score >= 50 else 'info' }} text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <span class="fw-bold small">{{ rec.match_score|int }}%</span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">
+                                        <a href="{{ url_for('view_job', job_id=job.id) }}" class="text-decoration-none">
+                                            {{ job.title }}
+                                        </a>
+                                    </h6>
+                                    <p class="text-muted small mb-1">
+                                        {{ job.company_name or 'Company' }} • {{ job.location or 'Remote' }}
+                                    </p>
+                                    <small class="text-success">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Matched based on your skills
+                                    </small>
+                                </div>
+                                <a href="{{ url_for('view_job', job_id=job.id) }}" class="btn btn-sm btn-outline-primary">
+                                    View
+                                </a>
+                            </div>
+                        {% endfor %}
+                    {% elif profile.resume_path and available_jobs_count > 0 %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-arrow-repeat text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3 mb-3">Generating your personalized recommendations...</p>
+                            <a href="{{ url_for('job_recommendations') }}" class="btn btn-primary">
+                                <i class="bi bi-stars me-2"></i>View Recommendations
+                            </a>
+                        </div>
+                    {% elif available_jobs_count == 0 %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-briefcase text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3 mb-0">
+                                No jobs available yet. Recruiters will post jobs soon!
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-cloud-upload text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3 mb-0">
+                                Upload your resume to get personalized job recommendations
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Summary -->
+    {% if profile.resume_path %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0"><i class="bi bi-person me-2"></i>Profile Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Domain:</strong>
+                            <p class="text-muted mb-0">{{ profile.detected_domain or 'Not specified' }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Experience Level:</strong>
+                            <p class="text-muted mb-0">{{ profile.experience_level or 'Not specified' | title }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Years of Experience:</strong>
+                            <p class="text-muted mb-0">{{ profile.experience_years or 0 }} years</p>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Location:</strong>
+                            <p class="text-muted mb-0">{{ profile.location or 'Not specified' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

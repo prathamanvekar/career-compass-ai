@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Company Profile - AI Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-building me-2"></i>Company Profile</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('recruiter_profile') }}">
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label fw-semibold">Your Name</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name"
+                                   value="{{ profile.full_name or '' }}" placeholder="John Doe">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company_name" class="form-label fw-semibold">Company Name *</label>
+                            <input type="text" class="form-control" id="company_name" name="company_name"
+                                   value="{{ profile.company_name or '' }}" placeholder="Acme Inc." required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company_description" class="form-label fw-semibold">Company Description</label>
+                            <textarea class="form-control" id="company_description" name="company_description" rows="4"
+                                      placeholder="Tell candidates about your company...">{{ profile.company_description or '' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company_location" class="form-label fw-semibold">Company Location</label>
+                            <input type="text" class="form-control" id="company_location" name="company_location"
+                                   value="{{ profile.company_location or '' }}" placeholder="San Francisco, CA">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="company_website" class="form-label fw-semibold">Company Website</label>
+                            <input type="url" class="form-control" id="company_website" name="company_website"
+                                   value="{{ profile.company_website or '' }}" placeholder="https://www.example.com">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-2"></i>Save Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

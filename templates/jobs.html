@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Jobs - AI Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4"><i class="bi bi-search me-2"></i>Browse Jobs</h1>
+
+    <!-- Search & Filters -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('browse_jobs') }}">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" name="search" placeholder="Job title or keyword"
+                                   value="{{ search }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" name="location">
+                            <option value="">All Locations</option>
+                            <option value="Remote" {% if location == 'Remote' %}selected{% endif %}>Remote</option>
+                            <option value="New York" {% if location == 'New York' %}selected{% endif %}>New York</option>
+                            <option value="San Francisco" {% if location == 'San Francisco' %}selected{% endif %}>San Francisco</option>
+                            <option value="Los Angeles" {% if location == 'Los Angeles' %}selected{% endif %}>Los Angeles</option>
+                            <option value="Chicago" {% if location == 'Chicago' %}selected{% endif %}>Chicago</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" name="work_type">
+                            <option value="">All Types</option>
+                            <option value="Full-time" {% if work_type == 'Full-time' %}selected{% endif %}>Full-time</option>
+                            <option value="Part-time" {% if work_type == 'Part-time' %}selected{% endif %}>Part-time</option>
+                            <option value="Contract" {% if work_type == 'Contract' %}selected{% endif %}>Contract</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" name="experience">
+                            <option value="">All Levels</option>
+                            <option value="Entry level" {% if experience == 'Entry level' %}selected{% endif %}>Entry Level</option>
+                            <option value="Mid-Senior level" {% if experience == 'Mid-Senior level' %}selected{% endif %}>Mid-Senior</option>
+                            <option value="Director" {% if experience == 'Director' %}selected{% endif %}>Director</option>
+                            <option value="Executive" {% if experience == 'Executive' %}selected{% endif %}>Executive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-funnel me-1"></i>Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Job Listings -->
+    <div class="row">
+        <div class="col-12">
+            {% if jobs.items %}
+                <p class="text-muted mb-3">Showing {{ jobs.items|length }} of {{ jobs.total }} jobs</p>
+
+                {% for job in jobs.items %}
+                <div class="card shadow-sm border-0 mb-3 job-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="mb-1">
+                                    <a href="{{ url_for('view_job', job_id=job.id) }}" class="text-decoration-none">
+                                        {{ job.title }}
+                                    </a>
+                                </h5>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-building me-1"></i>{{ job.company_name or 'Company' }}
+                                    <span class="mx-2">•</span>
+                                    <i class="bi bi-geo-alt me-1"></i>{{ job.location or 'Location not specified' }}
+                                    {% if job.remote_allowed %}
+                                        <span class="badge bg-success ms-2">Remote</span>
+                                    {% endif %}
+                                </p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% if job.work_type %}
+                                        <span class="badge bg-primary bg-opacity-10 text-primary">{{ job.work_type }}</span>
+                                    {% endif %}
+                                    {% if job.experience_level %}
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ job.experience_level }}</span>
+                                    {% endif %}
+                                    {% if job.max_salary %}
+                                        <span class="badge bg-success bg-opacity-10 text-success">
+                                            ${{ "{:,}".format(job.max_salary) }}/{{ job.pay_period or 'year' }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <small class="text-muted d-block mb-2">
+                                    <i class="bi bi-eye me-1"></i>{{ job.views or 0 }} views
+                                    <span class="mx-1">•</span>
+                                    <i class="bi bi-people me-1"></i>{{ job.applies or 0 }} applicants
+                                </small>
+                                <a href="{{ url_for('view_job', job_id=job.id) }}" class="btn btn-outline-primary btn-sm">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                <nav aria-label="Job listings pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if jobs.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('browse_jobs', page=jobs.prev_num, search=search, location=location, work_type=work_type, experience=experience) }}">Previous</a>
+                            </li>
+                        {% endif %}
+
+                        {% for page_num in jobs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                <li class="page-item {% if page_num == jobs.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('browse_jobs', page=page_num, search=search, location=location, work_type=work_type, experience=experience) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">…</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if jobs.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('browse_jobs', page=jobs.next_num, search=search, location=location, work_type=work_type, experience=experience) }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3">No jobs found</h4>
+                    <p class="text-muted">Try adjusting your search filters</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

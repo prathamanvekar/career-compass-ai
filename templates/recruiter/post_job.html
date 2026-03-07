@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Post a Job - AI Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-plus-lg me-2"></i>Post a New Job</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('post_job') }}">
+                        <!-- Job Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label fw-semibold">Job Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" required
+                                   placeholder="e.g., Senior Software Engineer">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-semibold">Job Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="6" required
+                                      placeholder="Describe the role, responsibilities, and requirements..."></textarea>
+                        </div>
+
+                        <div class="row">
+                            <!-- Location -->
+                            <div class="col-md-6 mb-3">
+                                <label for="location" class="form-label fw-semibold">Location</label>
+                                <input type="text" class="form-control" id="location" name="location"
+                                       placeholder="e.g., New York, NY" value="{{ profile.company_location or '' }}">
+                            </div>
+
+                            <!-- Work Type -->
+                            <div class="col-md-6 mb-3">
+                                <label for="work_type" class="form-label fw-semibold">Work Type</label>
+                                <select class="form-select" id="work_type" name="work_type">
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Internship">Internship</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Experience Level -->
+                            <div class="col-md-6 mb-3">
+                                <label for="experience_level" class="form-label fw-semibold">Experience Level</label>
+                                <select class="form-select" id="experience_level" name="experience_level">
+                                    <option value="Entry level">Entry Level</option>
+                                    <option value="Associate">Associate</option>
+                                    <option value="Mid-Senior level">Mid-Senior Level</option>
+                                    <option value="Director">Director</option>
+                                    <option value="Executive">Executive</option>
+                                </select>
+                            </div>
+
+                            <!-- Remote -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Remote Work</label>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" class="form-check-input" id="remote_allowed" name="remote_allowed">
+                                    <label class="form-check-label" for="remote_allowed">Remote work allowed</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Min Salary -->
+                            <div class="col-md-6 mb-3">
+                                <label for="min_salary" class="form-label fw-semibold">Minimum Salary (USD/year)</label>
+                                <input type="number" class="form-control" id="min_salary" name="min_salary"
+                                       placeholder="e.g., 80000">
+                            </div>
+
+                            <!-- Max Salary -->
+                            <div class="col-md-6 mb-3">
+                                <label for="max_salary" class="form-label fw-semibold">Maximum Salary (USD/year)</label>
+                                <input type="number" class="form-control" id="max_salary" name="max_salary"
+                                       placeholder="e.g., 120000">
+                            </div>
+                        </div>
+
+                        <!-- Required Skills -->
+                        <div class="mb-4">
+                            <label for="skills" class="form-label fw-semibold">Required Skills</label>
+                            <input type="text" class="form-control" id="skills" name="skills"
+                                   placeholder="Python, JavaScript, SQL, AWS (comma-separated)">
+                            <small class="text-muted">Enter skills separated by commas</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-send me-2"></i>Post Job
+                            </button>
+                            <a href="{{ url_for('recruiter_dashboard') }}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

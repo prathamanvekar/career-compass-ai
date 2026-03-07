@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Analysis - AI Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0"><i class="bi bi-file-earmark-text me-2"></i>Resume Analysis</h1>
+        <a href="{{ url_for('upload_resume') }}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-repeat me-2"></i>Upload New Resume
+        </a>
+    </div>
+
+    {% if not profile.resume_path %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        No resume uploaded yet. <a href="{{ url_for('upload_resume') }}">Upload now</a>
+    </div>
+    {% else %}
+
+    <div class="row g-4">
+        <!-- Resume Score Card -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center p-4">
+                    <h5 class="card-title">Resume Score</h5>
+                    <div class="score-circle mx-auto my-4">
+                        <svg viewBox="0 0 100 100" style="width: 150px; height: 150px;">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="45" fill="none"
+                                    stroke="{{ 'var(--bs-success)' if profile.resume_score >= 70 else 'var(--bs-warning)' if profile.resume_score >= 50 else 'var(--bs-danger)' }}"
+                                    stroke-width="8"
+                                    stroke-linecap="round"
+                                    stroke-dasharray="{{ profile.resume_score * 2.83 }} 283"
+                                    transform="rotate(-90 50 50)"/>
+                            <text x="50" y="50" text-anchor="middle" dy=".3em" font-size="24" font-weight="bold"
+                                  fill="{{ 'var(--bs-success)' if profile.resume_score >= 70 else 'var(--bs-warning)' if profile.resume_score >= 50 else 'var(--bs-danger)' }}">
+                                {{ profile.resume_score }}
+                            </text>
+                            <text x="50" y="65" text-anchor="middle" font-size="10" fill="#6c757d">/100</text>
+                        </svg>
+                    </div>
+
+                    <p class="text-muted">
+                        {% if profile.resume_score >= 70 %}
+                            <span class="text-success"><i class="bi bi-check-circle me-1"></i>Excellent resume!</span>
+                        {% elif profile.resume_score >= 50 %}
+                            <span class="text-warning"><i class="bi bi-exclamation-circle me-1"></i>Good, but can be improved</span>
+                        {% else %}
+                            <span class="text-danger"><i class="bi bi-x-circle me-1"></i>Needs significant improvement</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Overview -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0"><i class="bi bi-person me-2"></i>Extracted Profile</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="text-muted small">Full Name</label>
+                            <p class="fw-semibold mb-2">{{ profile.full_name or 'Not detected' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Detected Domain</label>
+                            <p class="fw-semibold mb-2">
+                                <span class="badge bg-primary">{{ profile.detected_domain or 'Not detected' }}</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Experience Level</label>
+                            <p class="fw-semibold mb-2">{{ profile.experience_level or 'Not detected' | title }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Years of Experience</label>
+                            <p class="fw-semibold mb-2">{{ profile.experience_years or 0 }} years</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Location</label>
+                            <p class="fw-semibold mb-2">{{ profile.location or 'Not detected' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Contact</label>
+                            <p class="fw-semibold mb-2">{{ profile.phone or 'Not detected' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0"><i class="bi bi-tools me-2"></i>Extracted Skills ({{ skills|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if skills %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in skills %}
+                                <span class="badge bg-primary bg-opacity-10 text-primary">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No skills detected</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0"><i class="bi bi-mortarboard me-2"></i>Education</h5>
+                </div>
+                <div class="card-body">
+                    {% if education %}
+                        {% for edu in education %}
+                            <div class="{% if not loop.last %}mb-3 pb-3 border-bottom{% endif %}">
+                                <h6 class="mb-1">{{ edu.degree or 'Degree' }} in {{ edu.field or 'Field' }}</h6>
+                                <p class="text-muted small mb-0">
+                                    {{ edu.institution or 'Institution' }}
+                                    {% if edu.year %} • {{ edu.year }}{% endif %}
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">No education detected</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Work History -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>Work Experience</h5>
+                </div>
+                <div class="card-body">
+                    {% if work_history %}
+                        {% for job in work_history %}
+                            <div class="{% if not loop.last %}mb-3 pb-3 border-bottom{% endif %}">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">{{ job.title or 'Position' }}</h6>
+                                    <small class="text-muted">{{ job.duration or '' }}</small>
+                                </div>
+                                <p class="text-primary mb-1">{{ job.company or 'Company' }}</p>
+                                {% if job.description %}
+                                    <p class="text-muted small mb-0">{{ job.description }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">No work experience detected</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhancement Suggestions -->
+        {% if enhancement %}
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning bg-opacity-10">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Improvement Suggestions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Strengths -->
+                        {% if enhancement.strengths %}
+                        <div class="col-md-6">
+                            <h6 class="text-success"><i class="bi bi-check-circle me-2"></i>Strengths</h6>
+                            <ul class="list-unstyled">
+                                {% for strength in enhancement.strengths %}
+                                    <li class="mb-2">
+                                        <i class="bi bi-check text-success me-2"></i>{{ strength }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <!-- Weaknesses -->
+                        {% if enhancement.weaknesses %}
+                        <div class="col-md-6">
+                            <h6 class="text-warning"><i class="bi bi-exclamation-circle me-2"></i>Areas to Improve</h6>
+                            <ul class="list-unstyled">
+                                {% for weakness in enhancement.weaknesses %}
+                                    <li class="mb-2">
+                                        <i class="bi bi-arrow-right text-warning me-2"></i>{{ weakness }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <!-- Actionable Suggestions -->
+                        {% if enhancement.enhancement_suggestions %}
+                        <div class="col-12">
+                            <h6><i class="bi bi-list-check me-2"></i>Actionable Suggestions</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Suggestion</th>
+                                            <th>Priority</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for suggestion in enhancement.enhancement_suggestions %}
+                                        <tr>
+                                            <td><span class="badge bg-secondary">{{ suggestion.category }}</span></td>
+                                            <td>{{ suggestion.suggestion }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'danger' if suggestion.priority == 'high' else 'warning' if suggestion.priority == 'medium' else 'info' }}">
+                                                    {{ suggestion.priority | title }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% endif %}
+</div>
+{% endblock %}
